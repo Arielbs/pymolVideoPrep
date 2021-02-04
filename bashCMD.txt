@@ -1,0 +1,6 @@
+##### slidePrep pymol alias
+alias pmlVid="/Users/arielbs10/opt/anaconda3/envs/pymolVid37/bin/pymol  -cq /Volumes/ROCKET-nano/projects/pymolVideoPrep/source/main.py"
+#####
+
+Here I can add anything I want
+alias pmlTest="/XXX..XXX/anaconda3/envs/pymolVid37/bin/pymol  -cq /XXX..XXX/pymolVideoPrep/source/main.py"
