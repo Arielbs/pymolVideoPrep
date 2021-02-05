@@ -15,7 +15,6 @@ from Bio.PDB.PDBParser import PDBParser
 
 
 
-
 class compPymolObj:
     name = "" # Name for the computational part
     objName = "" # Name for a pymol object to interact with 
@@ -852,6 +851,88 @@ def saveModel(sele,name ):
 
 	print(1)
 	# use: multisave ASU6.pdb, AAA
+
+
+
+
+
+
+####################################################################################################################################################
+##################################### utils for video preparation #####################################
+####################################################################################################################################################
+import cv2
+import progressbar as pb
+from PIL import Image, ImageDraw, ImageFont
+from time import strftime
+from time import gmtime
+import textwrap
+
+
+
+
+def text2video(frames,text,textColor,bg_color,imageSize,fontSize,fontSource,position,FPS=30,t=[0,0]):
+    img = Image.new('RGB', (imageSize[0], imageSize[1] ), color = bg_color)
+    fnt = ImageFont.truetype(fontSource, fontSize)
+    d = ImageDraw.Draw(img)
+    d.multiline_text((5, 10), text, fill=textColor, font=fnt)
+    #d.text((3,10), text, font=fnt, fill=textColor)
+    imgNP = np.array(img)
+    
+    ### dimensions 
+    pixelsY = frames[0].shape[0]
+    pixelsX = frames[0].shape[1]
+    yStart = position[0]
+    yEnd = yStart+imageSize[1]
+    xStart = position[1]
+    xEnd = xStart+imageSize[0]
+
+    ### timing 
+    for k in range(len(frames)):
+        if (t[0]==0 and t[1]==0):
+            frames[k][yStart:yEnd,xStart:xEnd,:] =  np.clip(frames[k][yStart:yEnd,xStart:xEnd,:].astype('int')+imgNP.astype('int'),0,255).astype('uint8')
+        elif (k>FPS*t[0] and k<FPS*t[1]):
+            frames[k][yStart:yEnd,xStart:xEnd,:] =  np.clip(frames[k][yStart:yEnd,xStart:xEnd,:].astype('int')+imgNP.astype('int'),0,255).astype('uint8')
+    return frames
+
+
+def clock2video(frames,textColor,bg_color,imageSize,fontSize,fontSource,position,FPS=30):
+    TotalTime = strftime("%M:%S", gmtime(len(frames)/FPS))
+    ### dimensions 
+    pixelsY = frames[0].shape[0]
+    pixelsX = frames[0].shape[1]
+    yStart = position[0]
+    yEnd = yStart+imageSize[1]
+    xStart = position[1]
+    xEnd = xStart+imageSize[0]
+
+    ### timing 
+    for k in range(len(frames)):
+        CurrentTime = strftime("%M:%S", gmtime(k/FPS))
+        img = Image.new('RGB', (imageSize[0], imageSize[1] ), color = bg_color)
+        fnt = ImageFont.truetype(fontSource, fontSize)
+        d = ImageDraw.Draw(img)
+        d.rectangle([0,0,imageSize[0]-1,imageSize[1]-1], fill=None, outline=(255,255,255))
+        d.text((6,5), CurrentTime+" of "+TotalTime, font=fnt, fill=textColor)
+        dNP = np.asarray(img).copy().astype(np.uint64)
+        timeRatio = int(k/len(frames)*imageSize[0])
+        dNP[1:-1,1:timeRatio,:] += 255
+        np.place(dNP, dNP>255,0)
+        dNP = dNP.astype(np.uint8)
+        #new_im = Image.fromarray(dNP)
+        #imgNP = np.array(img)
+        frames[k][yStart:yEnd,xStart:xEnd,:] =  dNP
+    return frames
+
+
+
+
+
+
+
+
+
+
+
 
 
 

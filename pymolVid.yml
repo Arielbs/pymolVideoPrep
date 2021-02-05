@@ -8,3 +8,7 @@ dependencies:
   - pymol
   - biopython
   - time
+  - textwrap3
+  - pillow
+  - progressbar2
+  - opencv

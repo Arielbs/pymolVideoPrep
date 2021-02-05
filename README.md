@@ -19,9 +19,13 @@ https://twitter.com/Arielbs100/status/1346931500336365570
       head -3 bashCMD.txt >> ~/.bashrc
   d. source ~/.bashrc
 
-3. run example:
+3. run example (this can be time consuming process in which it will dump .png files by default to outputSlides/test/ unless specified otherwise ):
    pmlVid Acomp.pbb Bcomp.pdb 
 
+4. Create .mp4 file from a slide folder (path to input slides and output video file are specified in source/slides2videoRev.py [lines 22, 23]):
+    python source/slides2videoRev.py   
+   To see the result open  output/Vid/test.mp4 file 
+      
 
 Note:
   This project is purposed to aid beginers in simulation based mulecular visualization, please contact with any bugs in running the example. 
